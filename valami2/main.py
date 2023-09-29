@@ -7,7 +7,7 @@ from pybricks.ev3devices import ColorSensor
 from pybricks.tools import wait
 from fork import Fork
 from move import Move
-#from warehouse import WH
+from warehouse import WH
 import time
 
 
@@ -50,16 +50,19 @@ my_WH = WH()
 #forktolevel = Fork.movetolevel
 #forklift = Fork.lift
 #forktolevel(2)
-def bringbox()
+def bringbox():
     kell=['K','K']
     for x in kell:
         kordinates =my_WH.findbox(x)
-        my_move.movetocord(kordinates[0],kordinates[1])
+        my_move.movetocord(kordinates[0],kordinates[1],kordinates[2],x)
         for y in my_WH.findbox(x):
             print("a kordináták "+str(y))
 
-def foundbox()
-   for 
+def checkallbox():
+    for x in range(my_WH.getlenghtofrakta()):
+        for y in range(my_WH.gethightofraktar()):
+            my_WH.setboxcolor(1,x,y,my_fork.getcolor())
+            
  
 
 ev3.speaker.beep()

@@ -3,8 +3,10 @@ from pybricks.parameters import Port
 from pybricks.robotics import DriveBase
 from pybricks.ev3devices import UltrasonicSensor
 from pybricks.tools import wait, StopWatch
+from pybricks.ev3devices import GyroSensor
 from fork import Fork
 import math
+
 class Move:
     def __init__(self):
         self.degreetoCm = 0.025
@@ -13,20 +15,24 @@ class Move:
         self.timer = StopWatch()
         self.positionX = -1
         self.positionY = 0
-        self.distenceBetweenBoxCm = 70
+        self.boxsize = 70
         self.left_motor = Motor(Port.B)
         self.right_motor = Motor(Port.C)
         self.robot = DriveBase(self.left_motor, self.right_motor, wheel_diameter=55.5, axle_track=125)
         self.fork=Fork()
+        self.gs=GyroSensor(Port.S3)
+        self.gs.reset_angle(0)
         #self.mysensor = UltrasonicSensor(Port.S1)
-        #self.myleftsensor = nxt.sensor.Port.S2
-        #self.myrightsensor = nxt.sensor.Port.S3
 
     def moveforward(self, distanceinCm):
-        self.robot.straight(100)
+        self.robot.straight(distanceinCm)
 
     def tourn(self, degree):
-        self.robot.turn(degree)
+        self.robot.turn((degree - self.gs.angle())-15)
+        for x in range(10):
+            self.robot.turn((degree-self.gs.angle())/2)
+
+
         #a = (self.wd * self.pi) / 360
         #leftw = 0
        # rightw = 0
@@ -55,17 +61,35 @@ class Move:
 
     
     def backmovfrombox(self):
-        self.robot.straight(timer.time*-100)
+        self.robot.straight(self.timer.time * -100)
 
-    def movetocord(self,x,y):
-        tourn(180)
-        moveforward((self.position-x)*self.distenceBetweenBoxCm)
-        tourn(90) #lehet negatív ha rosz oldalon van a raktár
-        self.fork.movetolevel(y)
-        movetobox()
+    def movetoWH(self):
+        self.moveforward(self.boxsize * -2)
+        self.tourn(180)
+        self.moveforward(self.boxsize)
+
+
+        
+    def movetocord(self,x,y,jvb,color):
+        self.movetoWH()
+        self.moveforward(self.boxsize * y)
+        if jvb == 1:  # True = jobra, False = balra
+            self.tourn(90)
+        else:
+            self.tourn(270)
+        self.fork.movetolevel(x)
+        self.moveforward(self.boxsize * 3)
+        if self.fork.colorcheck(color):
+            return True
+        return False
+
+    def movebackfromcord(self,x,y):
         self.fork.lift()
-        backmovfrombox()
-        self.fork.movetolevel(0)
-        tourn(90) # ez is rosz lesz ha rosz oldalon van a raktár
-        moveforward((self.position-x)*self.distenceBetweenBoxCm)
+        self.moveforward(self.boxsize*-3)
+        self.tourn(0)
+        self.moveforward(self.boxsize*(y+3))
         self.fork.lift()
+    
+    
+
+
