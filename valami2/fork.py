@@ -5,7 +5,7 @@ class Fork:
     fork = Motor(Port.A)
     liftdistanceCm = 1.5
     degreetoCm = 0.025
-    levelinCm = 10.8
+    levelinCm = 4.6
     level = 0
     islift = False 
 
@@ -18,9 +18,7 @@ class Fork:
     def lift(self):
         if self.islift:
             self.fork.run_angle(100, self.liftdistanceCm / self.degreetoCm)
-            self.islift=False
+            self.islift = False
         else:
             self.fork.run_angle(-100, self.liftdistanceCm / self.degreetoCm)
-            self.islift=True
-            
-
+            self.islift = True

@@ -1,9 +1,8 @@
-
 class WH:
     def __init__(self):
-        self.raktar = [['K','K','Z','K','Z','K'],['Z','K','K','K','Z','Z']]
+        self.raktar = [['K', 'K', 'Z', 'K', 'Z', 'K'], ['Z', 'K', 'K', 'K', 'Z', 'Z']]
 
-    def findbox(self, color):  # Properly indented and added 'self' parameter
+    def findbox(self, color):
         print("itt is voltam")
         for x in range(2):
             for y in range(6):
@@ -11,5 +10,11 @@ class WH:
                     self.raktar[x][y] = 'X'
                     return [x, y]
 
-    #def detectbox(self,x,y)
+    def detectbox(self):  # Added missing colon
+        # Add your code for the detectbox method here
 
+    def getlenghtofraktar(self):
+        return len(self.raktar[0])
+
+    def gethightofraktar(self):
+        return len(self.raktar)
